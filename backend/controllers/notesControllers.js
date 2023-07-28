@@ -49,8 +49,7 @@ const getNote = async (req, res) => {
 
         const {id} = req.params
 
-        const response = await DB.execProcedure('getNoteById', {id})
-        // let note = await response.recordsets[0][0]
+        const response = await DB.execProcedure('getNoteById', {id}).recordset[0]
 
         res.status(200).json({response})
         
@@ -70,6 +69,7 @@ const updateNote = async (req, res) => {
         const {title, content} = req.body
 
         await DB.execProcedure('updateNote', {id, title, content})
+        res,status(200).json({message: 'Note updated successfully'})
         
     } catch (error) {
         console.log(error);
