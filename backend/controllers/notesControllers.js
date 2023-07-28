@@ -29,10 +29,9 @@ const getNotes = async (req, res) => {
 
     try {
 
-        const notes = await DB.execProcedure('getNotes')
-        console.log(notes)
+        const notes = await DB.execProcedure("getNotes").recordset
 
-        // res.status(200).json({notes})
+        res.status(200).json({notes})
         
     } catch (error) {
         console.log(error);
@@ -105,4 +104,3 @@ module.exports = {
     deleteNote
 
 }
-
