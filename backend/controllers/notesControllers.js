@@ -29,9 +29,9 @@ const getNotes = async (req, res) => {
 
     try {
 
-        const notes = await DB.execProcedure("getNotes").recordset
+        const notes = await (await DB.execProcedure("getNotes")).recordsets[0]
 
-        res.status(200).json({notes})
+        res.status(200).json(notes)
         
     } catch (error) {
         console.log(error);
@@ -49,7 +49,7 @@ const getNote = async (req, res) => {
 
         const {id} = req.params
 
-        const response = await DB.execProcedure('getNoteById', {id}).recordset[0]
+        const response = await DB.execProcedure('getNoteById', {id})
 
         res.status(200).json({response})
         
@@ -68,8 +68,8 @@ const updateNote = async (req, res) => {
 
         const {title, content} = req.body
 
-        await DB.execProcedure('updateNote', {id, title, content})
-        res,status(200).json({message: 'Note updated successfully'})
+        await DB.execProcedure('updateNoteById', {id, title, content})
+        res.status(200).json({message: 'Note updated successfully'})
         
     } catch (error) {
         console.log(error);
@@ -83,7 +83,7 @@ const updateNote = async (req, res) => {
 const deleteNote = async (req, res) => {
     try {
         const {id} = req.params
-        await DB.execProcedure('deleteNote', {id})
+        await DB.execProcedure('deleteNoteById', {id})
         res.status(200).json({message: 'Note deleted successfully'})
 
     } catch (error) {
