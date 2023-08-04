@@ -12,6 +12,7 @@ class DB {
            request.input(key, data[key])
        }
        const result = await request.execute(procedureName)
+       console.log(result)
 
         return result
    }
