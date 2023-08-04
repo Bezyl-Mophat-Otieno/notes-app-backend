@@ -1,7 +1,8 @@
 const {deleteNote} = require("./notesControllers"); 
 const mssql = require('mssql')
+const DB = require('../dbHelpers')
 
-
+jest.mock('../dbHelpers')
 describe('Deleting a Note', () => {
 it('should delete a note successfully when the id is provided', async () => {
 const noteId = 'y3refgd78264527'
@@ -16,13 +17,7 @@ const res = {
     json: jest.fn()
 }
 
-jest.spyOn(mssql, 'connect').mockResolvedValueOnce({
-    request: jest.fn().mockReturnThis(),
-    input: jest.fn().mockReturnThis(),
-    execute: jest.fn().mockResolvedValueOnce({
-        rowsAffected:[1]
-    })
-})
+DB.execProcedure.mockResolvedValueOnce({rowsAffected: [1]})
 
 await deleteNote (req, res)
 

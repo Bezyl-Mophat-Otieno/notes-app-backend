@@ -2,6 +2,8 @@ const mssql = require('mssql')
 const DB = require('../dbHelpers')
 const {updateNote} = require ('../controllers/notesControllers')
 
+jest.mock('../dbHelpers')
+
 describe('Updating a Note', () => {
     it(' should update a note successfully when the id is provided  ', async () => {
         const noteId = 'y3refgd78264527'
@@ -22,13 +24,9 @@ describe('Updating a Note', () => {
             json: jest.fn()
         }
 
-        jest.spyOn(mssql, 'connect').mockResolvedValueOnce({
-            request: jest.fn().mockReturnThis(),
-            input: jest.fn().mockReturnThis(),
-            execute: jest.fn().mockResolvedValueOnce({
-                rowsAffected:[1]
-        })
-    })
+     DB.execProcedure.mockResolvedValueOnce({
+            rowsAffected: [1]
+     })
 
     await DB.execProcedure(procedureName, {...mockNote,noteId})
     await updateNote(req, res)
@@ -48,14 +46,10 @@ it('should return a 400 error when the id is not provided', async () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn()
     }
-    jest.spyOn(mssql  , 'connect').mockResolvedValueOnce({
-        request: jest.fn().mockReturnThis(),
-        input: jest.fn().mockReturnThis(),
-        execute: jest.fn().mockResolvedValueOnce({
-            rowsAffected:[0]
-
-        })
+    DB.execProcedure.mockResolvedValueOnce({
+        rowsAffected: [0]
     })
+  
     
 
     await updateNote (req, res)
@@ -64,9 +58,4 @@ it('should return a 400 error when the id is not provided', async () => {
     
 })
 
-it('should return a 500 error when the server fails to update a note', async () => {
-
-
-
-})
 });

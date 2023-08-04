@@ -21,7 +21,7 @@ const createNote = async (req, res) => {
         await DB.execProcedure(procedureName, {id, title, content})
 
 
-        res.status(201).json({message: 'Note created successfully'})
+        return res.status(201).json({message: 'Note created successfully'})
 
     }catch(err){
             
@@ -102,6 +102,7 @@ const deleteNote = async (req, res) => {
         if(!id){
             res.status(400).json({message: 'Please provide the id of the note you want to delete'})
         }
+        
         await DB.execProcedure('deleteNoteById', {id})
         res.status(200).json({message: 'Note deleted successfully'})
 

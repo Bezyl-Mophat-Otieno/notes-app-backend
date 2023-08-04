@@ -3,7 +3,7 @@ const DB = require ('../dbHelpers')
 const {createNote} = require ('./notesControllers')
 
 
-
+jest.mock('../dbHelpers')
 
 describe ('Create Note Test' , ()=>{
     it('should create a new note successfully when all the required fields are provided', async ()=>{
@@ -20,14 +20,7 @@ describe ('Create Note Test' , ()=>{
             json: jest.fn()
         }
 
-        jest.spyOn(mssql, "connect").mockResolvedValueOnce({
-            request: jest.fn().mockReturnThis(),
-            input: jest.fn().mockReturnThis(),
-            execute: jest.fn().mockResolvedValueOnce({
-              rowsAffected: [1],
-            }),
-          });
-
+        DB.execProcedure.mockResolvedValueOnce({rowsAffected: [1]})
         await createNote (req , res)
         expect(res.status).toHaveBeenCalledWith(201)
         expect(res.json).toHaveBeenCalledWith({message: 'Note created successfully'})
@@ -42,14 +35,6 @@ describe ('Create Note Test' , ()=>{
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
         }
-
-        jest.spyOn(mssql, "connect").mockResolvedValueOnce({
-            request: jest.fn().mockReturnThis(),
-            input: jest.fn().mockReturnThis(),
-            execute: jest.fn().mockResolvedValueOnce({
-                rowsAffected: [0],
-            })
-        })
 
         await createNote (req , res)
 

@@ -1,7 +1,8 @@
 const mssql = require('mssql');
 const {getNote} = require ('./notesControllers')
+const DB = require('../dbHelpers')
 
-
+jest.mock('../dbHelpers')
 describe('Getting A single Note ', () => {
     it('should return a single note when the id is provided', async () => {
         const noteId = '  y3refgd78264527'
@@ -23,14 +24,10 @@ describe('Getting A single Note ', () => {
             json: jest.fn()
         }
 
-        jest.spyOn(mssql , "connect").mockResolvedValueOnce({
-            request: jest.fn().mockReturnThis(), 
-            input: jest.fn().mockReturnThis(),
-            execute: jest.fn().mockResolvedValueOnce({
-                recordset: [mockNote]
-            })   
+      
+        DB.execProcedure.mockResolvedValueOnce({
+            recordset: [mockNote]
         })
-
         await getNote (req , res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.json).toHaveBeenCalledWith({response: [mockNote]})
@@ -46,14 +43,11 @@ describe('Getting A single Note ', () => {
             status: jest.fn().mockReturnThis(), 
             json: jest.fn()
         }
-
-        jest.spyOn(mssql , "connect").mockResolvedValueOnce({
-            request: jest.fn().mockReturnThis(), 
-            input: jest.fn().mockReturnThis(),
-            execute: jest.fn().mockResolvedValueOnce({
-                recordset: []
-            })   
+   
+        DB.execProcedure.mockResolvedValueOnce({
+            recordset: []
         })
+      
 
         await getNote (req , res)
         expect(res.status).toHaveBeenCalledWith(400)
